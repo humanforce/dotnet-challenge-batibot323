@@ -146,7 +146,3 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
-
-# Ignore bin and obj directories in AppointmentScheduler project
-AppointmentScheduling/AppointmentScheduler/bin/
-AppointmentScheduling/AppointmentScheduler/obj/
