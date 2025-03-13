@@ -21,3 +21,47 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [ ] edit the presentation layer (api), `AppointmentScheduler`
 - [ ] try to start e2e debug flow using api + postman + local debugging
 - [ ] connect to db layer
+
+# Appendix
+## SQL Migration
+```sql
+-- Drop existing tables if they exist (in reverse order of creation to handle foreign key constraints)
+IF OBJECT_ID('dbo.Appointments', 'U') IS NOT NULL
+    DROP TABLE dbo.Appointments;
+
+IF OBJECT_ID('dbo.Doctors', 'U') IS NOT NULL
+    DROP TABLE dbo.Doctors;
+
+IF OBJECT_ID('dbo.Patients', 'U') IS NOT NULL
+    DROP TABLE dbo.Patients;
+
+-- Create tables with appropriate indices
+CREATE TABLE Patients (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    PhoneNumber NVARCHAR(15) NOT NULL,
+    EmailAddress NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Doctors (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Specialty NVARCHAR(100) NOT NULL
+);
+CREATE INDEX IDX_Doctors_Specialty ON Doctors(Specialty);
+
+CREATE TABLE Appointments (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    PatientID INT NOT NULL,
+    DoctorID INT NOT NULL,
+    StartDate DATETIME NOT NULL,
+    EndDate DATETIME NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    FOREIGN KEY (PatientID) REFERENCES Patients(ID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(ID)
+);
+CREATE INDEX IDX_Appointments_PatientID ON Appointments(PatientID);
+CREATE INDEX IDX_Appointments_DoctorID ON Appointments(DoctorID);
+-- not sure about indexing the time. i'm still thinking there should be a way to lock later a one-hour block if you're scheduling for a doctor so we don't do double booking if multiple nodes try to write to the same timeblock concurrently.
+```
