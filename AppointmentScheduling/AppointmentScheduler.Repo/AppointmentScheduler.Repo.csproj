@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AppointmentScheduler.Domain\AppointmentScheduler.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
