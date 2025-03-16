@@ -23,6 +23,8 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 ## Implementing
 - done with scaffolding for repo, domain layer - entities, service, and repo interfaces.
 - for repo layer methods that aren't directly needed by the required endpoints, i can just mark them for now as not necessary. but they'll likely be needed to do data setup.
+- for now, i just do two db trips to create an appointment, check if there's a conflict, then only i proceed to actual creation once proved conflict-free. supposedly, we plan to do this in one trip to the db. for horizontal scaling, it will do the locking of db rows and inserting data.
+- decided to forego heroku and just demo in my local. used local sql, postman, and ef core for repo, but with me creating the db migration myself as it's the easiest for me.
 
 ## TODO
 - [ ] review the repo layer, could be lots of default implementations that's unnecessary.

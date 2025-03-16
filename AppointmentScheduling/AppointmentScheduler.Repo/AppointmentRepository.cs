@@ -20,7 +20,14 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 
         public async Task<bool> HasConflict(Appointment appointment)
 		{
-            bool hasConflict = await _context.Appointments
+			// at first, there's four cases of conflict
+			// 1. appointment conflicts at the start
+			// 2. appointment conflicts at the end
+			// 3. appointment is inside the preexisting one
+			// 4. appointment is larger than the preexisting one
+			// but actually old.StartDate < new.EndDate actually almost ensures that there's an overlap
+            // except if we're way past the preexisting, such that new.StartDate > old.EndDate then no overlap.
+			bool hasConflict = await _context.Appointments
 				.AnyAsync(a => a.DoctorID == appointment.DoctorID &&
 							   a.StartDate < appointment.EndDate &&
 							   a.EndDate > appointment.StartDate &&
