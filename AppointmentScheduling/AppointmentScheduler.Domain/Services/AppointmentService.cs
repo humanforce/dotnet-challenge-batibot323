@@ -1,22 +1,42 @@
 ﻿using AppointmentScheduler.Domain.Entities;
+using AppointmentScheduler.Domain.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppointmentScheduler.Domain.Services
 {
 	public class AppointmentService : IAppointmentService
 	{
-		Task<bool> IAppointmentService.CreateAppointment(Appointment appointment)
+		private readonly IAppointmentRepository _appointmentRepository;
+
+		public AppointmentService(IAppointmentRepository appointmentRepository)
 		{
-			throw new NotImplementedException();
+			_appointmentRepository = appointmentRepository;
 		}
 
-		Task<Appointment> IAppointmentService.GetAppointmentById(int id)
+		public async Task<bool> CreateAppointment(Appointment appointment)
 		{
-			throw new NotImplementedException();
+			var canBeScheduled = !(await _appointmentRepository.HasConflict(appointment));
+			if (!canBeScheduled)
+			{
+				return false;
+			}
+			try
+			{
+				await _appointmentRepository.AddAsync(appointment);
+			}
+			catch (Exception)
+			{
+				// log here!
+				throw;
+			}
+
+			return true;
+		}
+
+		public async Task<Appointment> GetAppointmentById(int id)
+		{
+			return await _appointmentRepository.GetByIdAsync(id);
 		}
 	}
 }

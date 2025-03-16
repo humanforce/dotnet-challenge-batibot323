@@ -20,10 +20,11 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 
         public async Task<bool> HasConflict(Appointment appointment)
 		{
-			return await _context.Appointments
+            bool hasConflict = await _context.Appointments
 				.AnyAsync(a => a.DoctorID == appointment.DoctorID &&
-							   a.StartTime < appointment.EndTime &&
-							   a.EndTime > appointment.StartTime);
+							   a.StartDate < appointment.EndDate &&
+							   a.EndDate > appointment.StartDate);
+            return hasConflict;
 		}
 
 		public async Task<Appointment> GetByIdAsync(int id)
@@ -62,7 +63,7 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 		public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
         {
             return await _context.Appointments
-                .Where(a => a.DoctorID == doctorId && a.StartTime.Date == date.Date)
+                .Where(a => a.DoctorID == doctorId && a.StartDate.Date == date.Date)
                 .ToListAsync();
         }
     }

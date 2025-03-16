@@ -7,8 +7,8 @@ namespace AppointmentScheduler.Domain.Entities
 		public int ID { get; set; }
 		public int PatientID { get; set; }
 		public int DoctorID { get; set; }
-		public DateTime StartTime { get; set; }
-		public DateTime EndTime { get; set; }
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
 		public AppointmentStatus Status { get; set; }
 
 		public bool CanBeScheduled(DateTime proposedTime)

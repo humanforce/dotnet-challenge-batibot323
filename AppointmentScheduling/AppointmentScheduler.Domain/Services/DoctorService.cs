@@ -32,8 +32,8 @@ namespace AppointmentScheduler.Domain.Services
 
 			var takenTimeSlots = appointments.Select(a => new TimeSlot
 			{
-				StartTime = a.StartTime,
-				EndTime = a.EndTime
+				StartTime = a.StartDate,
+				EndTime = a.EndDate
 			}).ToList();
 
 			var availableTimeSlots = ComputeAvailableTimeSlots(takenTimeSlots, date);

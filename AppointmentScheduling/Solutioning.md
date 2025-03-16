@@ -29,7 +29,14 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [X] edit the presentation layer (api), `AppointmentScheduler`
 - [X] try to start e2e debug flow using api + postman + local debugging
 - [X] connect to db layer
-- [ ] unit tests
+- [X] unit tests
+- [X] `POST /appointments`
+- [ ] `PUT /appointments/{id}`
+- [ ] `DELETE /appointments/{id}`
+- [ ] `GET /doctor/{doctorId}/available?date={date}`
+- [ ] `GET /patient/{patientId}/appointments`
+- [ ] `GET doctor/{doctorId}/appointments/?date={date}`
+- [ ] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
 
 # Appendix
 ## SQL Migration
