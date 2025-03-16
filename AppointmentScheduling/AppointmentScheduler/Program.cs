@@ -1,6 +1,7 @@
 using AppointmentScheduler.Infrastructure;
 using AppointmentScheduler.Infrastructure.Repositories;
 using AppointmentScheduler.Domain.Repositories;
+using AppointmentScheduler.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,12 +13,16 @@ builder.Services.AddOpenApi();
 
 // Register the DbContext with the connection string
 builder.Services.AddDbContext<AppointmentSchedulerDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+		sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
 
 // Register the repositories
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+// Register the services
+builder.Services.AddScoped<IDoctorService, DoctorService>();
 
 var app = builder.Build();
 

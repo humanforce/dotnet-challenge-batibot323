@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AppointmentScheduler.Domain.Services
 {
 	// todo-hani: rename this to a more generic service because this will be too fine-grained. or we can keep for the sake of extensibility.
-	public class DoctorService
+	public class DoctorService : IDoctorService
 	{
 		private readonly IAppointmentRepository _appointmentRepository;
 		private readonly IDoctorRepository _doctorRepository;
