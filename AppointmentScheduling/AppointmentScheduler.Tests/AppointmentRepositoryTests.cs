@@ -25,7 +25,7 @@ namespace AppointmentScheduler.Tests
 		[InlineData(1, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Scheduled, true)]  // Exact overlap
 		[InlineData(1, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Scheduled, false)] // Ends exactly when another starts
 		[InlineData(1, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Starts exactly when another ends
-		
+
 		// different doctor should have no conflicts
 		[InlineData(2, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Scheduled, false)] // Different doctor, overlapping
 		[InlineData(2, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Scheduled, false)] // Different doctor, overlapping in front
@@ -98,10 +98,49 @@ namespace AppointmentScheduler.Tests
 				Assert.Equal(expectedResult, result);
 			}
 		}
+
+		[Theory]
+		[InlineData(1, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Scheduled, false)]  // Overlapping
+		[InlineData(1, "2025-03-16T09:00:01", "2025-03-16T09:00:02", AppointmentStatus.Scheduled, false)]  // Contained inside
+		[InlineData(1, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Scheduled, false)]  // Overlapping in front
+		[InlineData(1, "2025-03-16T10:00:00", "2025-03-16T10:30:00", AppointmentStatus.Scheduled, false)] // No overlap
+		[InlineData(1, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Scheduled, false)]  // Exact overlap
+		[InlineData(1, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Scheduled, false)] // Ends exactly when another starts
+		[InlineData(1, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Starts exactly when another ends
+		public async Task HasConflict_WithCancelledExistingAppointment_ShouldReturnExpectedResult(
+			int newDoctorId, string newStartTime, string newEndTime, AppointmentStatus status, bool expectedResult)
+		{
+			// Arrange
+			var options = GetInMemoryDbContextOptions();
+			using (var context = new AppointmentSchedulerDbContext(options))
+			{
+				var repository = new AppointmentRepository(context);
+				var existingAppointment = new Appointment
+				{
+					PatientID = 1,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 16, 9, 0, 0),
+					EndDate = new DateTime(2025, 3, 16, 9, 30, 0),
+					Status = AppointmentStatus.Cancelled
+				};
+				await context.Appointments.AddAsync(existingAppointment);
+				await context.SaveChangesAsync();
+
+				var newAppointment = new Appointment
+				{
+					PatientID = 2,
+					DoctorID = newDoctorId,
+					StartDate = DateTime.Parse(newStartTime),
+					EndDate = DateTime.Parse(newEndTime),
+					Status = status
+				};
+
+				// Act
+				var result = await repository.HasConflict(newAppointment);
+
+				// Assert
+				Assert.Equal(expectedResult, result);
+			}
+		}
 	}
 }
-
-
-
-
-
