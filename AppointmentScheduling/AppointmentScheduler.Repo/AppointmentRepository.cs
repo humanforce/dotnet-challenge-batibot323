@@ -23,7 +23,8 @@ namespace AppointmentScheduler.Infrastructure.Repositories
             bool hasConflict = await _context.Appointments
 				.AnyAsync(a => a.DoctorID == appointment.DoctorID &&
 							   a.StartDate < appointment.EndDate &&
-							   a.EndDate > appointment.StartDate);
+							   a.EndDate > appointment.StartDate &&
+                               (a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Completed));
             return hasConflict;
 		}
 

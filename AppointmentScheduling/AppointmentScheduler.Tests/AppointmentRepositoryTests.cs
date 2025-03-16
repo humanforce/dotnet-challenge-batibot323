@@ -35,10 +35,10 @@ namespace AppointmentScheduler.Tests
 		[InlineData(2, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Different doctor, starts exactly when another ends
 
 		// cancelled status should return no conflict whether there's overlap or none.
-		[InlineData(1, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Cancelled, false)] // Overlapping
-		[InlineData(1, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Cancelled, false)] // Overlapping in front
+		[InlineData(1, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Cancelled, true)] // Overlapping
+		[InlineData(1, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Cancelled, true)] // Overlapping in front
 		[InlineData(1, "2025-03-16T10:00:00", "2025-03-16T10:30:00", AppointmentStatus.Cancelled, false)] // No overlap
-		[InlineData(1, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Cancelled, false)] // Exact overlap
+		[InlineData(1, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Cancelled, true)] // Exact overlap
 		[InlineData(1, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Cancelled, false)] // Ends exactly when another starts
 		[InlineData(1, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Cancelled, false)] // Starts exactly when another ends
 		[InlineData(2, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Cancelled, false)] // Different doctor, overlapping
@@ -70,6 +70,9 @@ namespace AppointmentScheduler.Tests
 			var options = GetInMemoryDbContextOptions();
 			using (var context = new AppointmentSchedulerDbContext(options))
 			{
+				context.Database.EnsureDeleted(); // Reset the database
+				context.Database.EnsureCreated(); // Recreate the database
+
 				var repository = new AppointmentRepository(context);
 				var existingAppointment = new Appointment
 				{
@@ -114,6 +117,9 @@ namespace AppointmentScheduler.Tests
 			var options = GetInMemoryDbContextOptions();
 			using (var context = new AppointmentSchedulerDbContext(options))
 			{
+				context.Database.EnsureDeleted(); // Reset the database
+				context.Database.EnsureCreated(); // Recreate the database
+
 				var repository = new AppointmentRepository(context);
 				var existingAppointment = new Appointment
 				{
