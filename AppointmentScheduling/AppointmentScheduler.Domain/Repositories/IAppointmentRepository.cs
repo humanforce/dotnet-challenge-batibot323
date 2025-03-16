@@ -13,5 +13,6 @@ namespace AppointmentScheduler.Domain.Repositories
 		Task UpdateAsync(Appointment appointment);
 		Task DeleteAsync(int id);
 		Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date);
+		Task<bool> HasConflict(Appointment appointment);
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace AppointmentScheduler.Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace AppointmentScheduler.Domain.Entities
 {
 	public class Appointment
 	{
@@ -16,6 +18,7 @@
 		}
 	}
 
+	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public enum AppointmentStatus
 	{
 		// do we think about pending, especially for doing recurring appointments?

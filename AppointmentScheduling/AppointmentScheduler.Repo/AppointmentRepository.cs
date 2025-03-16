@@ -18,7 +18,15 @@ namespace AppointmentScheduler.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Appointment> GetByIdAsync(int id)
+        public async Task<bool> HasConflict(Appointment appointment)
+		{
+			return await _context.Appointments
+				.AnyAsync(a => a.DoctorID == appointment.DoctorID &&
+							   a.StartTime < appointment.EndTime &&
+							   a.EndTime > appointment.StartTime);
+		}
+
+		public async Task<Appointment> GetByIdAsync(int id)
         {
             return await _context.Appointments.FindAsync(id);
         }

@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
 // Register the services
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 var app = builder.Build();
 
