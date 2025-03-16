@@ -11,6 +11,13 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 
 ## Thoughts
 - Should the entities be what it should exactly look like in the db? Does this mean that Doctor's Available Time Slots (ATS) would be normalized? No, it shouldn't exist in the DB as ATS would be dependent on the input date and it's not worth saving into the DB. Approach would be that the entity Doctor shall have ATS as property but it's not required but we can populate when necessary.
+- designing the API based off the initial requirements, i'd say top two domains are appointments and patients. even for bonus points, there's no requirement to fetch a list of doctors or filter by specialty. i can see a need for the future but for now, let's limit to appointments and patients. on hindsight: just need `appointments` api for now, actually.
+  - Create, update, and cancel an appointment - `POST /appointments`, `PUT /appointments/{id}`, `DELETE /appointments/{id}`
+  - Get available time slots for a specific doctor in a given specific date. - `GET /appointments/doctor/{doctorId}/available?date={date}`
+  - Retrieve a patient’s appointment history - `GET /appointments/patient/{patientId}`
+  - Get a daily schedule of appointments for a doctor - `GET /appointments/doctor/{doctorId}?date={date}`
+  - Generate a summary report of appointments by status (e.g., total scheduled, completed, cancelled) for a given time period - `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
+- i’m wrinkling my brain how to approach the api design, do i just center this around appointments for now?? GET /appointments/doctor/{doctorId}/available?date={date} or GET /doctor/{doctorId}/appointments/available?date={date} but if it's too hard to think about, there seems to be not much difference whether you pick one or the other. can even go implement both endpoints that point to the same code behind the scenes.
 
 ## Implementing
 - done with scaffolding for repo, domain layer - entities, service, and repo interfaces.
@@ -18,9 +25,10 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 
 ## TODO
 - [ ] review the repo layer, could be lots of default implementations that's unnecessary.
-- [ ] edit the presentation layer (api), `AppointmentScheduler`
-- [ ] try to start e2e debug flow using api + postman + local debugging
-- [ ] connect to db layer
+- [X] edit the presentation layer (api), `AppointmentScheduler`
+- [X] try to start e2e debug flow using api + postman + local debugging
+- [X] connect to db layer
+- [ ] unit tests
 
 # Appendix
 ## SQL Migration
