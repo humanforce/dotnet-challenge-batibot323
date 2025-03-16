@@ -3,6 +3,7 @@ using AppointmentScheduler.Infrastructure;
 using AppointmentScheduler.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -64,7 +65,7 @@ namespace AppointmentScheduler.Tests
 		[InlineData(2, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Completed, false)] // Different doctor, ends exactly when another starts
 		[InlineData(2, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Completed, false)] // Different doctor, starts exactly when another ends
 		public async Task HasConflict_ShouldReturnExpectedResult(
-			int newDoctorId, string newStartTime, string newEndTime, AppointmentStatus status, bool expectedResult)
+			int newDoctorId, string newStartTime, string newEndTime, string status, bool expectedResult)
 		{
 			// Arrange
 			var options = GetInMemoryDbContextOptions();
@@ -111,7 +112,7 @@ namespace AppointmentScheduler.Tests
 		[InlineData(1, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Scheduled, false)] // Ends exactly when another starts
 		[InlineData(1, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Starts exactly when another ends
 		public async Task HasConflict_WithCancelledExistingAppointment_ShouldReturnExpectedResult(
-			int newDoctorId, string newStartTime, string newEndTime, AppointmentStatus status, bool expectedResult)
+			int newDoctorId, string newStartTime, string newEndTime, string status, bool expectedResult)
 		{
 			// Arrange
 			var options = GetInMemoryDbContextOptions();

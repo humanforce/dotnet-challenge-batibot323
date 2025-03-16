@@ -9,7 +9,7 @@ namespace AppointmentScheduler.Domain.Entities
 		public int DoctorID { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
-		public AppointmentStatus Status { get; set; }
+		public String Status { get; set; }
 
 		public bool CanBeScheduled(DateTime proposedTime)
 		{
@@ -18,12 +18,10 @@ namespace AppointmentScheduler.Domain.Entities
 		}
 	}
 
-	[JsonConverter(typeof(JsonStringEnumConverter))]
-	public enum AppointmentStatus
+	public static class AppointmentStatus
 	{
-		// do we think about pending, especially for doing recurring appointments?
-		Scheduled,
-		Completed,
-		Cancelled
+		public const string Scheduled = "SCHEDULED";
+		public const string Completed = "COMPLETED";
+		public const string Cancelled = "CANCELLED";
 	}
 }

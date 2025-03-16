@@ -61,11 +61,12 @@ namespace AppointmentScheduler.Infrastructure.Repositories
             }
         }
 
-		// todo-hani: review this. this won't get if there's a 23:30 - 00:30 appointment.
 		public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
         {
             return await _context.Appointments
-                .Where(a => a.DoctorID == doctorId && a.StartDate.Date == date.Date)
+                .Where(a => a.DoctorID == doctorId && 
+                    (a.StartDate.Date == date.Date || a.EndDate.Date == date.Date) &&
+					(a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Completed))
                 .ToListAsync();
         }
     }

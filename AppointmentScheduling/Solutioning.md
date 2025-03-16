@@ -31,9 +31,9 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [X] connect to db layer
 - [X] unit tests
 - [X] `POST /appointments`
-- [ ] `PUT /appointments/{id}`
-- [ ] `DELETE /appointments/{id}`
-- [ ] `GET /doctor/{doctorId}/available?date={date}`
+- [X] `PUT /appointments/{id}`
+- [X] `DELETE /appointments/{id}`
+- [X] `GET /doctor/{doctorId}/available?date={date}`
 - [ ] `GET /patient/{patientId}/appointments`
 - [ ] `GET doctor/{doctorId}/appointments/?date={date}`
 - [ ] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`

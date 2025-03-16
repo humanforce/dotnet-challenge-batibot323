@@ -1,5 +1,6 @@
 ﻿using AppointmentScheduler.Domain.Entities;
 using AppointmentScheduler.Domain.Repositories;
+using AppointmentScheduler.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,86 +8,65 @@ using System.Threading.Tasks;
 
 namespace AppointmentScheduler.Domain.Services
 {
-	// todo-hani: rename this to a more generic service because this will be too fine-grained. or we can keep for the sake of extensibility.
 	public class DoctorService : IDoctorService
 	{
 		private readonly IAppointmentRepository _appointmentRepository;
 		private readonly IDoctorRepository _doctorRepository;
 
-		// todo-hani: think how this is injected.
 		public DoctorService(IAppointmentRepository appointmentRepository, IDoctorRepository doctorRepository)
 		{
 			_appointmentRepository = appointmentRepository;
 			_doctorRepository = doctorRepository;
 		}
 
-		// todo-hani: think of architecture. can controller access domain.repo or does it always have to go through domain.services -> domain.repo -> repo project?
 		public async Task<Doctor> GetDoctorByIdAsync(int id)
 		{
 			return await _doctorRepository.GetByIdAsync(id);
 		}
 
-		public async Task<IEnumerable<TimeSlot>> GetAvailableTimeSlotsAsync(int doctorId, DateTime date)
+		public async Task<Doctor?> GetAvailableTimeSlotsAsync(int doctorId, DateTime date)
 		{
+			var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+			if (doctor == null)
+			{
+				return null;
+			}
+
 			var appointments = await _appointmentRepository.GetAppointmentsByDoctorAndDateAsync(doctorId, date);
+			doctor.AvailableTimeSlots = CalculateAvailableTimeSlots(appointments, date).ToList();
 
-			var takenTimeSlots = appointments.Select(a => new TimeSlot
-			{
-				StartTime = a.StartDate,
-				EndTime = a.EndDate
-			}).ToList();
-
-			var availableTimeSlots = ComputeAvailableTimeSlots(takenTimeSlots, date);
-
-			return availableTimeSlots;
+			return doctor;
 		}
 
-		private IEnumerable<TimeSlot> ComputeAvailableTimeSlots(List<TimeSlot> takenTimeSlots, DateTime date)
+		private IEnumerable<TimeSlot> CalculateAvailableTimeSlots(IEnumerable<Appointment> appointments, DateTime date)
 		{
-			var availableTimeSlots = new List<TimeSlot>();
+			var timeSlots = new List<TimeSlot>();
 
-			// todo-hani: remove working hours here.
-			// Define the working hours (e.g., 9 AM to 5 PM)
-			var startOfDay = date.Date.AddHours(9);
-			var endOfDay = date.Date.AddHours(17);
+			// Sort appointments by start time
+			var sortedAppointments = appointments.OrderBy(a => a.StartDate).ToList();
 
-			// Add initial available slot from start of day to the first taken slot
-			if (takenTimeSlots.Count == 0 || startOfDay < takenTimeSlots.First().StartTime)
+			// Initialize the start of the day to midnight
+			var currentStart = date.Date;
+
+			foreach (var appointment in sortedAppointments)
 			{
-				availableTimeSlots.Add(new TimeSlot
+				if (appointment.StartDate > currentStart)
 				{
-					StartTime = startOfDay,
-					EndTime = takenTimeSlots.Count > 0 ? takenTimeSlots.First().StartTime : endOfDay
-				});
-			}
-
-			// Add available slots between taken slots
-			for (int i = 0; i < takenTimeSlots.Count - 1; i++)
-			{
-				var endOfCurrentSlot = takenTimeSlots[i].EndTime;
-				var startOfNextSlot = takenTimeSlots[i + 1].StartTime;
-
-				if (endOfCurrentSlot < startOfNextSlot)
-				{
-					availableTimeSlots.Add(new TimeSlot
-					{
-						StartTime = endOfCurrentSlot,
-						EndTime = startOfNextSlot
-					});
+					timeSlots.Add(new TimeSlot { StartTime = currentStart, EndTime = appointment.StartDate });
 				}
+				currentStart = appointment.EndDate > currentStart ? appointment.EndDate : currentStart;
 			}
 
-			// Add final available slot from the last taken slot to the end of day
-			if (takenTimeSlots.Count > 0 && takenTimeSlots.Last().EndTime < endOfDay)
+			// Add the remaining time slot until the end of the day
+			var endOfDay = date.Date.AddDays(1);
+			if (currentStart < endOfDay)
 			{
-				availableTimeSlots.Add(new TimeSlot
-				{
-					StartTime = takenTimeSlots.Last().EndTime,
-					EndTime = endOfDay
-				});
+				timeSlots.Add(new TimeSlot { StartTime = currentStart, EndTime = endOfDay });
 			}
 
-			return availableTimeSlots;
+			return timeSlots;
 		}
+
+
 	}
 }
