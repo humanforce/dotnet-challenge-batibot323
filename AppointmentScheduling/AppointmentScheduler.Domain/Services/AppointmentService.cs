@@ -34,9 +34,47 @@ namespace AppointmentScheduler.Domain.Services
 			return true;
 		}
 
+		public async Task<bool> UpdateAppointment(Appointment appointment)
+		{
+			var canBeScheduled = !(await _appointmentRepository.HasConflict(appointment));
+			if (!canBeScheduled)
+			{
+				return false;
+			}
+			try
+			{
+				await _appointmentRepository.UpdateAsync(appointment);
+			}
+			catch (Exception)
+			{
+				// log here!
+				throw;
+			}
+
+			return true;
+		}
+
+		public async Task<bool> DeleteAppointment(int id)
+		{
+			try
+			{
+				await _appointmentRepository.DeleteAsync(id);
+				return true;
+			}
+			catch (Exception)
+			{
+				// log here!
+				throw;
+			}
+		}
+
 		public async Task<Appointment> GetAppointmentById(int id)
 		{
 			return await _appointmentRepository.GetByIdAsync(id);
 		}
 	}
 }
+
+
+
+

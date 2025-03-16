@@ -49,6 +49,7 @@ namespace AppointmentScheduler.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        // think-hani: look at using deleted timestamp instead of actually deleting in db.
         public async Task DeleteAsync(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
