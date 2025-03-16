@@ -8,6 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppointmentScheduler.Domain\AppointmentScheduler.Domain.csproj" />
+    <ProjectReference Include="..\AppointmentScheduler.Repo\AppointmentScheduler.Repo.csproj" />
   </ItemGroup>
 
 </Project>

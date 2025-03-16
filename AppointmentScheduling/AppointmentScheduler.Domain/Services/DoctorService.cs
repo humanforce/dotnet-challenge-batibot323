@@ -7,14 +7,23 @@ using System.Threading.Tasks;
 
 namespace AppointmentScheduler.Domain.Services
 {
-	// todo-hani: rename this to a more generic service because this will be too fine-grained.
+	// todo-hani: rename this to a more generic service because this will be too fine-grained. or we can keep for the sake of extensibility.
 	public class DoctorService
 	{
 		private readonly IAppointmentRepository _appointmentRepository;
+		private readonly IDoctorRepository _doctorRepository;
 
-		public DoctorService(IAppointmentRepository appointmentRepository)
+		// todo-hani: think how this is injected.
+		public DoctorService(IAppointmentRepository appointmentRepository, IDoctorRepository doctorRepository)
 		{
 			_appointmentRepository = appointmentRepository;
+			_doctorRepository = doctorRepository;
+		}
+
+		// todo-hani: think of architecture. can controller access domain.repo or does it always have to go through domain.services -> domain.repo -> repo project?
+		public async Task<Doctor> GetDoctorByIdAsync(int id)
+		{
+			return await _doctorRepository.GetByIdAsync(id);
 		}
 
 		public async Task<IEnumerable<TimeSlot>> GetAvailableTimeSlotsAsync(int doctorId, DateTime date)
@@ -36,6 +45,7 @@ namespace AppointmentScheduler.Domain.Services
 		{
 			var availableTimeSlots = new List<TimeSlot>();
 
+			// todo-hani: remove working hours here.
 			// Define the working hours (e.g., 9 AM to 5 PM)
 			var startOfDay = date.Date.AddHours(9);
 			var endOfDay = date.Date.AddHours(17);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+// nit-hani: can rename namespace?
 namespace AppointmentScheduler.Infrastructure.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
