@@ -38,5 +38,16 @@ namespace AppointmentScheduler.Controllers
 			}
 			return Ok(doctor);
 		}
+
+		[HttpGet("{doctorId}/appointments")]
+		public async Task<IActionResult> GetDoctorAndAppointmentsAsync(int doctorId, [FromQuery] DateTime date)
+		{
+			var appointments = await _doctorService.GetDoctorAndAppointmentsAsync(doctorId, date);
+			if (appointments == null)
+			{
+				return NotFound();
+			}
+			return Ok(appointments);
+		}
 	}
 }

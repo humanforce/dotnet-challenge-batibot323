@@ -1,6 +1,6 @@
-﻿using AppointmentScheduler.Domain.Entities;
+﻿using AppointmentScheduler.Domain.DTOs;
+using AppointmentScheduler.Domain.Entities;
 using AppointmentScheduler.Domain.Repositories;
-using AppointmentScheduler.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,12 +38,30 @@ namespace AppointmentScheduler.Domain.Services
 			return doctor;
 		}
 
+		public async Task<DoctorAppointmentsDto> GetDoctorAndAppointmentsAsync(int doctorId, DateTime date)
+		{
+			var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+			if (doctor == null)
+			{
+				return null;
+			}
+
+			var appointments = await _appointmentRepository.GetAppointmentsByDoctorAndDateAsync(doctorId, date);
+			// this can be ignored but it just makes sense to add. you can remove this but also update dto so it doesn't include available time slots.
+			doctor.AvailableTimeSlots = CalculateAvailableTimeSlots(appointments, date).ToList();
+			var doctorAppointments = new DoctorAppointmentsDto { Doctor = doctor, Appointments = appointments };
+
+			return doctorAppointments;
+		}
+
 		private IEnumerable<TimeSlot> CalculateAvailableTimeSlots(IEnumerable<Appointment> appointments, DateTime date)
 		{
 			var timeSlots = new List<TimeSlot>();
 
 			// Sort appointments by start time
-			var sortedAppointments = appointments.OrderBy(a => a.StartDate).ToList();
+			var sortedAppointments = appointments
+				.Where(a => a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Completed)
+				.OrderBy(a => a.StartDate).ToList();
 
 			// Initialize the start of the day to midnight
 			var currentStart = date.Date;
@@ -66,7 +84,5 @@ namespace AppointmentScheduler.Domain.Services
 
 			return timeSlots;
 		}
-
-
 	}
 }

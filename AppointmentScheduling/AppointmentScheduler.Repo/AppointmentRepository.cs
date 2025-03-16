@@ -65,9 +65,8 @@ namespace AppointmentScheduler.Infrastructure.Repositories
         {
             return await _context.Appointments
                 .Where(a => a.DoctorID == doctorId && 
-                    (a.StartDate.Date == date.Date || a.EndDate.Date == date.Date) &&
-					(a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Completed))
+                    (a.StartDate.Date == date.Date || a.EndDate.Date == date.Date))
                 .ToListAsync();
-        }
-    }
+		}
+	}
 }

@@ -68,8 +68,8 @@ namespace AppointmentScheduler.Tests.Services
 
 			var appointments = new List<Appointment>
 			{
-				new Appointment { StartDate = appointment1Start, EndDate = appointment1End },
-				new Appointment { StartDate = appointment2Start, EndDate = appointment2End }
+				new Appointment { StartDate = appointment1Start, EndDate = appointment1End, Status = AppointmentStatus.Scheduled },
+				new Appointment { StartDate = appointment2Start, EndDate = appointment2End, Status = AppointmentStatus.Scheduled }
 			};
 
 			_doctorRepositoryMock.Setup(repo => repo.GetByIdAsync(doctorId)).ReturnsAsync(doctor);
