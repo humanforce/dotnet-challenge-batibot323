@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "66ca420c-66dc-44ba-be34-042139e08a06",
+		"name": "hf-appointment-scheduler",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23868110"
+	},
+	"item": [
+		{
+			"name": "create appointment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n           \"PatientID\": 1,\n           \"DoctorID\": 2,\n           \"StartTime\": \"2023-10-15T09:00:00\",\n           \"EndTime\": \"2023-10-15T09:15:00\",\n           \"Status\": \"Scheduled\"\n         }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44355/api/appointment",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"appointment"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"https://localhost:44355/api/appointment\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n           \"PatientID\": 1,\n           \"DoctorID\": 2,\n           \"StartTime\": \"2023-10-15T09:00:00\",\n           \"EndTime\": \"2023-10-15T09:15:00\",\n           \"Status\": \"Scheduled\"\n         }'\n"
+			},
+			"response": []
+		},
+		{
+			"name": "create appointment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n           \"PatientID\": 1,\n           \"DoctorID\": 1,\n           \"StartDate\": \"2025-03-17T08:00:00\",\n           \"EndDate\": \"2025-03-17T08:30:00\",\n           \"Status\": \"Scheduled\"\n         }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44355/api/appointment",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"appointment"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"https://localhost:44355/api/appointment\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n           \"PatientID\": 1,\n           \"DoctorID\": 1,\n           \"StartTime\": \"2025-03-16T09:00:00\",\n           \"EndTime\": \"2025-03-16T09:30:00\",\n           \"Status\": \"Scheduled\"\n         }'\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "doctor available timeslots",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44355/api/doctor/1/available?date=2025-03-19",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"doctor",
+						"1",
+						"available"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-03-19"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"http://localhost:5000/api/doctor/1/available?date=2023-10-15\" -H \"accept: application/json\"\n"
+			},
+			"response": []
+		},
+		{
+			"name": "patient appointments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44355/api/patient/abc/appointments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"patient",
+						"abc",
+						"appointments"
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"https://localhost:44355/api/patient/1/appointments\" -H \"accept: application/json\"\n"
+			},
+			"response": []
+		},
+		{
+			"name": "doctor appointments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44355/api/doctor/1/appointments?date=2025-03-19",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"doctor",
+						"1",
+						"appointments"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-03-19"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"http://localhost:5000/api/doctor/1/available?date=2023-10-15\" -H \"accept: application/json\"\n"
+			},
+			"response": []
+		},
+		{
+			"name": "appointment summary",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44355/api/appointment/summary?startDate=2025-03-15T00:00:00&endDate=2025-03-20T00:00:00",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"api",
+						"appointment",
+						"summary"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2025-03-15T00:00:00"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-03-20T00:00:00"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"https://localhost:44355/api/appointment/summary?startDate=2025-03-19T00:00:00&endDate=2025-03-20T00:00:00\" -H \"accept: application/json\"\n"
+			},
+			"response": []
+		}
+	]
+}
