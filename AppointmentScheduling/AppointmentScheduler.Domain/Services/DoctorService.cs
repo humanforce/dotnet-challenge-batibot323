@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppointmentScheduler.Domain.Services
 {
@@ -34,6 +35,20 @@ namespace AppointmentScheduler.Domain.Services
 
 			var appointments = await _appointmentRepository.GetAppointmentsByDoctorAndDateAsync(doctorId, date);
 			doctor.AvailableTimeSlots = CalculateAvailableTimeSlots(appointments, date).ToList();
+
+			return doctor;
+		}
+
+		public async Task<Doctor?> GetAvailableTimeSlotsForDateRangeAsync(int doctorId, DateTime startDate, DateTime endDate)
+		{
+			var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+			if (doctor == null)
+			{
+				return null;
+			}
+
+			var appointments = await _appointmentRepository.GetAppointmentsByDoctorAndDateAsync(doctorId, startDate, endDate);
+			doctor.AvailableTimeSlots = CalculateAvailableTimeSlotsRange(appointments, startDate, endDate).ToList();
 
 			return doctor;
 		}
@@ -84,6 +99,12 @@ namespace AppointmentScheduler.Domain.Services
 			}
 
 			return timeSlots;
+		}
+
+		// todo-hani: implement this.
+		private IEnumerable<TimeSlot> CalculateAvailableTimeSlotsRange(IEnumerable<Appointment> appointments, DateTime startDate, DateTime endDate)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

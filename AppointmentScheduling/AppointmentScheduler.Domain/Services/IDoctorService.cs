@@ -11,5 +11,6 @@ namespace AppointmentScheduler.Domain.Services
 		Task<Doctor> GetDoctorByIdAsync(int id);
 		Task<Doctor?> GetAvailableTimeSlotsAsync(int doctorId, DateTime date);
 		Task<DoctorAppointmentsDto> GetDoctorAndAppointmentsAsync(int doctorId, DateTime date);
+		Task<Doctor?> GetAvailableTimeSlotsForDateRangeAsync(int doctorId, DateTime startDate, DateTime endDate);
 	}
 }

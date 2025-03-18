@@ -9,7 +9,7 @@ namespace AppointmentScheduler.Domain.Repositories
 	{
 		Task AddAsync(Appointment appointment);
 		Task UpdateAsync(Appointment appointment);
-		Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date);
+		Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime dateStart, DateTime? dateEnd = null);
 		Task<bool> HasConflict(Appointment appointment);
 		Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
 		Task<IEnumerable<Appointment>> GetAppointments(DateTime startDate, DateTime endDate);

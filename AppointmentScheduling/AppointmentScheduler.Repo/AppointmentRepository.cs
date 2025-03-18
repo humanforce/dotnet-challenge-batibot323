@@ -69,11 +69,17 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
+		// 
+		// Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime dateStart, DateTime? dateEnd = null);
+
+		public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime dateStart, DateTime? dateEnd = null)
 		{
+			dateEnd ??= dateStart; // If dateEnd is null, set it to dateStart
+
 			return await _context.Appointments
 				.Where(a => a.DoctorID == doctorId &&
-					(a.StartDate.Date == date.Date || a.EndDate.Date == date.Date))
+							(a.StartDate.Date >= dateStart.Date || a.EndDate.Date >= dateStart.Date) &&
+							(a.EndDate.Date <= dateEnd.Value.Date || a.StartDate.Date <= dateEnd.Value.Date))
 				.ToListAsync();
 		}
 

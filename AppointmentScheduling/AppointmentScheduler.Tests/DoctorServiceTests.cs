@@ -74,7 +74,7 @@ namespace AppointmentScheduler.Tests.Services
 			};
 
 			_doctorRepositoryMock.Setup(repo => repo.GetByIdAsync(doctorId)).ReturnsAsync(doctor);
-			_appointmentRepositoryMock.Setup(repo => repo.GetAppointmentsByDoctorAndDateAsync(doctorId, date)).ReturnsAsync(appointments);
+			_appointmentRepositoryMock.Setup(repo => repo.GetAppointmentsByDoctorAndDateAsync(doctorId, date, It.IsAny<DateTime?>())).ReturnsAsync(appointments);
 
 			// Act
 			var result = await _doctorService.GetAvailableTimeSlotsAsync(doctorId, date);
