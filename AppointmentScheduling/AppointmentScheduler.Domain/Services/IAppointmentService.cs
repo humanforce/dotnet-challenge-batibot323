@@ -8,7 +8,7 @@ public interface IAppointmentService
 	Task<bool> CreateAppointment(Appointment appointment);
 
 	Task<bool> UpdateAppointment(Appointment appointment);
-	Task<bool> DeleteAppointment(int id);
+	Task<bool> CancelAppointment(int id);
 	Task<AppointmentSummaryDto> GetAppointmentSummaryAsync(DateTime startDate, DateTime endDate);
 }
 

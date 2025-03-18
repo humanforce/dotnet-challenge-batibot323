@@ -79,12 +79,13 @@ namespace AppointmentScheduler.API.Controllers
 			}
 		}
 
+		// think-hani: for api users, this should be a delete method. but they can still use put to reinstate it as scheduled?
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAppointment(int id)
+		public async Task<IActionResult> CancelAppointment(int id)
 		{
 			try
 			{
-				var result = await _appointmentService.DeleteAppointment(id);
+				var result = await _appointmentService.CancelAppointment(id);
 				if (result)
 				{
 					return NoContent();

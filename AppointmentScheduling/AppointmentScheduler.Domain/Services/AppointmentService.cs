@@ -56,11 +56,11 @@ namespace AppointmentScheduler.Domain.Services
 		}
 
 		// cleanup-hani: delete this?
-		public async Task<bool> DeleteAppointment(int id)
+		public async Task<bool> CancelAppointment(int id)
 		{
 			try
 			{
-				await _appointmentRepository.DeleteAsync(id);
+				await _appointmentRepository.CancelAsync(id);
 				return true;
 			}
 			catch (Exception)
@@ -69,8 +69,6 @@ namespace AppointmentScheduler.Domain.Services
 				throw;
 			}
 		}
-
-		// urgent-hani: add cancel instead.
 
 		public async Task<Appointment> GetAppointmentById(int id)
 		{

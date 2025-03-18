@@ -13,9 +13,9 @@ namespace AppointmentScheduler.Domain.Repositories
 		Task<bool> HasConflict(Appointment appointment);
 		Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
 		Task<IEnumerable<Appointment>> GetAppointments(DateTime startDate, DateTime endDate);
+		Task CancelAsync(int id);
 
 		// cleanup-hani: delete the ff?
-		Task DeleteAsync(int id);
 		Task<IEnumerable<Appointment>> GetAllAsync();
 		Task<Appointment> GetByIdAsync(int id);
 	}
