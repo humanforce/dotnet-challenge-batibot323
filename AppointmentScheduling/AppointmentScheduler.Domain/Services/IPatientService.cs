@@ -1,4 +1,4 @@
-﻿using AppointmentScheduler.API.Dtos;
+﻿using AppointmentScheduler.Domain.DTOs;
 using AppointmentScheduler.Domain.Entities;
 using System.Threading.Tasks;
 

@@ -1,6 +1,6 @@
 ﻿using AppointmentScheduler.Domain.Entities;
 using AppointmentScheduler.Domain.Repositories;
-using AppointmentScheduler.API.Dtos;
+using AppointmentScheduler.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

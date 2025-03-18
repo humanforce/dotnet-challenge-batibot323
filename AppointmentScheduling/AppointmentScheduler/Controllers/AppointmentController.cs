@@ -101,6 +101,13 @@ namespace AppointmentScheduler.API.Controllers
 			}
 		}
 
+		[HttpGet("summary")]
+		public async Task<IActionResult> GetAppointmentSummary([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+		{
+			var summary = await _appointmentService.GetAppointmentSummaryAsync(startDate, endDate);
+			return Ok(summary);
+		}
+
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetAppointmentById(int id)
 		{

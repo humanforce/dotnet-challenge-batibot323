@@ -1,4 +1,5 @@
-﻿using AppointmentScheduler.Domain.Entities;
+﻿using AppointmentScheduler.Domain.DTOs;
+using AppointmentScheduler.Domain.Entities;
 using AppointmentScheduler.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
@@ -71,6 +72,36 @@ namespace AppointmentScheduler.Domain.Services
 		public async Task<Appointment> GetAppointmentById(int id)
 		{
 			return await _appointmentRepository.GetByIdAsync(id);
+		}
+
+		public async Task<AppointmentSummaryDto> GetAppointmentSummaryAsync(DateTime startDate, DateTime endDate)
+		{
+			var appointments = await _appointmentRepository.GetAppointments(startDate, endDate);
+
+
+			var scheduledAppointments = appointments.Where(a => a.Status.ToUpper() == "SCHEDULED").ToList();
+			var completedAppointments = appointments.Where(a => a.Status.ToUpper() == "COMPLETED").ToList();
+			var cancelledAppointments = appointments.Where(a => a.Status.ToUpper() == "CANCELLED").ToList();
+			var summary = new AppointmentSummaryDto
+			{
+				Scheduled = new AppointmentStatusSummary
+				{
+					Count = scheduledAppointments.Count,
+					Appointments = scheduledAppointments
+				},
+				Completed = new AppointmentStatusSummary
+				{
+					Count = completedAppointments.Count,
+					Appointments = completedAppointments
+				},
+				Cancelled = new AppointmentStatusSummary
+				{
+					Count = cancelledAppointments.Count,
+					Appointments = cancelledAppointments
+				}
+			};
+
+			return summary;
 		}
 	}
 }

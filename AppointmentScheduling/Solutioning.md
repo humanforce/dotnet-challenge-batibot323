@@ -38,7 +38,7 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [X] `GET /doctor/{doctorId}/available?date={date}`
 - [X] `GET /patient/{patientId}/appointments`
 - [X] `GET doctor/{doctorId}/appointments/?date={date}`
-- [ ] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
+- [X] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
 
 # Appendix
 ## SQL Migration

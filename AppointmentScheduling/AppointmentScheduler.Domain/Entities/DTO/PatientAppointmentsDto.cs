@@ -1,7 +1,7 @@
 using AppointmentScheduler.Domain.Entities;
 using System.Collections.Generic;
 
-namespace AppointmentScheduler.API.Dtos
+namespace AppointmentScheduler.Domain.DTOs
 {
     public class PatientAppointmentsDto
     {

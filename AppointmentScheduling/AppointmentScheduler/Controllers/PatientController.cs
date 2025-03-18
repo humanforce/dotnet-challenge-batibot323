@@ -1,4 +1,4 @@
-using AppointmentScheduler.API.Dtos;
+using AppointmentScheduler.Domain.DTOs;
 using AppointmentScheduler.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

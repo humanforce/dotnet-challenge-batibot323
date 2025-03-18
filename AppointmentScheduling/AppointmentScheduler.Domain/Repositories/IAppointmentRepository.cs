@@ -1,4 +1,5 @@
-﻿using AppointmentScheduler.Domain.Entities;
+﻿using AppointmentScheduler.Domain.DTOs;
+using AppointmentScheduler.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,5 +15,6 @@ namespace AppointmentScheduler.Domain.Repositories
 		Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date);
 		Task<bool> HasConflict(Appointment appointment);
 		Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
+		Task<IEnumerable<Appointment>> GetAppointments(DateTime startDate, DateTime endDate);
 	}
 }
