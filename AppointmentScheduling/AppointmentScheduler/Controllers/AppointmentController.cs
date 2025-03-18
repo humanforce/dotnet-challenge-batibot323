@@ -108,6 +108,7 @@ namespace AppointmentScheduler.API.Controllers
 			return Ok(summary);
 		}
 
+		// cleanup-hani: delete this?
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetAppointmentById(int id)
 		{
@@ -119,6 +120,7 @@ namespace AppointmentScheduler.API.Controllers
 			return Ok(appointment);
 		}
 
+		// defer-hani: can add this as part of entity?
 		private (bool, IActionResult?) IsAppointmentValid(Appointment appointment)
 		{
 			if (appointment == null)

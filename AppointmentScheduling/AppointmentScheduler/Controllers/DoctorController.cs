@@ -17,6 +17,7 @@ namespace AppointmentScheduler.Controllers
 			_doctorService = doctorService;
 		}
 
+		// cleanup-hani: delete this?
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetDoctorById(int id)
 		{

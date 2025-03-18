@@ -7,6 +7,8 @@ namespace AppointmentScheduler.Domain.Repositories
 	public interface IDoctorRepository
 	{
 		Task<Doctor> GetByIdAsync(int id);
+
+		// cleanup-hani: delete the ff?
 		Task<IEnumerable<Doctor>> GetAllAsync();
 		Task AddAsync(Doctor doctor);
 		Task UpdateAsync(Doctor doctor);

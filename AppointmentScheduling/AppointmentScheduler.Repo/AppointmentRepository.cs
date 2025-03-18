@@ -59,6 +59,7 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 		}
 
 		// think-hani: look at using deleted timestamp instead of actually deleting in db.
+		// cleanup-hani: delete this?
 		public async Task DeleteAsync(int id)
 		{
 			var appointment = await _context.Appointments.FindAsync(id);
@@ -68,6 +69,8 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 				await _context.SaveChangesAsync();
 			}
 		}
+
+		// urgent-hani: add cancel instead.
 
 		public async Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
 		{

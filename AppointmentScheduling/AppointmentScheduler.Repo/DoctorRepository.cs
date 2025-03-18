@@ -20,23 +20,27 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 			return await _context.Doctors.FindAsync(id);
 		}
 
+		// cleanup-hani: delete this?
 		public async Task<IEnumerable<Doctor>> GetAllAsync()
 		{
 			return await _context.Doctors.ToListAsync();
 		}
 
+		// cleanup-hani: delete this?
 		public async Task AddAsync(Doctor doctor)
 		{
 			await _context.Doctors.AddAsync(doctor);
 			await _context.SaveChangesAsync();
 		}
 
+		// cleanup-hani: delete this?
 		public async Task UpdateAsync(Doctor doctor)
 		{
 			_context.Doctors.Update(doctor);
 			await _context.SaveChangesAsync();
 		}
 
+		// cleanup-hani: delete this?
 		public async Task DeleteAsync(int id)
 		{
 			var doctor = await _context.Doctors.FindAsync(id);

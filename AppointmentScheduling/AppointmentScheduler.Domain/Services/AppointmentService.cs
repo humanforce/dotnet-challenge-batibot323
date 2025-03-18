@@ -55,6 +55,7 @@ namespace AppointmentScheduler.Domain.Services
 			return true;
 		}
 
+		// cleanup-hani: delete this?
 		public async Task<bool> DeleteAppointment(int id)
 		{
 			try
@@ -68,6 +69,8 @@ namespace AppointmentScheduler.Domain.Services
 				throw;
 			}
 		}
+
+		// urgent-hani: add cancel instead.
 
 		public async Task<Appointment> GetAppointmentById(int id)
 		{
