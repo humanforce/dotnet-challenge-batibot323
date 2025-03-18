@@ -80,6 +80,7 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 		{
 			return await _context.Appointments
 				.Where(a => a.PatientID == patientId)
+                .OrderByDescending(a => a.StartDate)
 				.ToListAsync();
 		}
 	}

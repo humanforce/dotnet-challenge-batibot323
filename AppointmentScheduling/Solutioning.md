@@ -36,7 +36,7 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [X] `PUT /appointments/{id}`
 - [X] `DELETE /appointments/{id}`
 - [X] `GET /doctor/{doctorId}/available?date={date}`
-- [ ] `GET /patient/{patientId}/appointments`
+- [X] `GET /patient/{patientId}/appointments`
 - [X] `GET doctor/{doctorId}/appointments/?date={date}`
 - [ ] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
 

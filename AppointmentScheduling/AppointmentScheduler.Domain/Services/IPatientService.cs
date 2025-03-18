@@ -1,11 +1,11 @@
-﻿using AppointmentScheduler.Domain.Entities;
-using System.Collections.Generic;
+﻿using AppointmentScheduler.API.Dtos;
+using AppointmentScheduler.Domain.Entities;
 using System.Threading.Tasks;
 
 namespace AppointmentScheduler.Domain.Services
 {
 	public interface IPatientService
 	{
-		Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(int patientId);
+		Task<PatientAppointmentsDto?> GetPatientAppointmentsAsync(int patientId);
 	}
 }

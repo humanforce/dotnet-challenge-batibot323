@@ -3,6 +3,7 @@ using AppointmentScheduler.Infrastructure.Repositories;
 using AppointmentScheduler.Domain.Repositories;
 using AppointmentScheduler.Domain.Services;
 using Microsoft.EntityFrameworkCore;
+using AppointmentScheduler.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 // Register the services
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();
 
