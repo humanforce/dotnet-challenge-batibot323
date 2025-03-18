@@ -66,6 +66,7 @@ namespace AppointmentScheduler.Domain.Services
 			// Initialize the start of the day to midnight
 			var currentStart = date.Date;
 
+			// creates timeslots where t.start is the previous appointment, a.end and t.end is the next a.start.
 			foreach (var appointment in sortedAppointments)
 			{
 				if (appointment.StartDate > currentStart)

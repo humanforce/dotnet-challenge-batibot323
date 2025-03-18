@@ -75,5 +75,12 @@ namespace AppointmentScheduler.Infrastructure.Repositories
                     (a.StartDate.Date == date.Date || a.EndDate.Date == date.Date))
                 .ToListAsync();
 		}
+
+		public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId)
+		{
+			return await _context.Appointments
+				.Where(a => a.PatientID == patientId)
+				.ToListAsync();
+		}
 	}
 }

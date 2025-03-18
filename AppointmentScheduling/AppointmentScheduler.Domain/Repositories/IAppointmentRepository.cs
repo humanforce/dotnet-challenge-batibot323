@@ -1,5 +1,4 @@
 ﻿using AppointmentScheduler.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,5 +13,6 @@ namespace AppointmentScheduler.Domain.Repositories
 		Task DeleteAsync(int id);
 		Task<IEnumerable<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date);
 		Task<bool> HasConflict(Appointment appointment);
+		Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
 	}
 }
