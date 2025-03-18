@@ -1,5 +1,15 @@
 # Overview
-This is to run you through my thought processes as I'm solving this problem.
+This is to run you through my thought processes as I'm solving this problem. Look at Appendix - Setup for how to set up this project.
+
+# Design
+- used clean architecture 
+  - but most of my entities are anemic classes because it needs to be incorporated with a service to access the repo layer
+- decided to use `/doctor/{id}/appointments` and `/patients/{id}/appointments` instead of `/appointments` because it adheres to rest and more extensible
+- used ef core but built the db tables using sql
+- i kept the crud operations in the domain repo interfaces and repo layer, but i marked them for cleanup because they're not necessary based on the requirements
+- i consider a 23:30 - 00:30 appointment to be included in both days
+- clustered index on appointments start date because we usually query with a date range
+  - however not sure how this works with our query not only looking at start date but also end date
 
 ## Initial Thoughts
 Scheduling appointments seem to be straightforward but now my initial hard think is how small I want the time resolution be. Can we assume appointments are in 15-minute blocks? Google Calendar actually allows you to specify a time down to the minute. The main problem here is to solve scheduling conflicts and how to find present a doctor's available time slots.
@@ -41,6 +51,9 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - [X] `GET /appointments/summary?startDate={startDate}&endDate={endDate}`
 
 # Appendix
+
+## Setup
+
 ## SQL Migration
 ```sql
 -- Drop existing tables if they exist (in reverse order of creation to handle foreign key constraints)
@@ -82,4 +95,13 @@ CREATE TABLE Appointments (
 CREATE INDEX IDX_Appointments_PatientID ON Appointments(PatientID);
 CREATE INDEX IDX_Appointments_DoctorID ON Appointments(DoctorID);
 -- not sure about indexing the time. i'm still thinking there should be a way to lock later a one-hour block if you're scheduling for a doctor so we don't do double booking if multiple nodes try to write to the same timeblock concurrently.
+
+-- Drop the existing primary key constraint and clustered index
+ALTER TABLE Appointments DROP CONSTRAINT PK__Appointm__3214EC27CF9E4449;
+
+-- Create a new clustered index on the StartDate column
+-- CREATE CLUSTERED INDEX IDX_Appointments_StartDate ON Appointments(StartDate);
+
+-- Recreate the primary key constraint as a non-clustered index
+ALTER TABLE Appointments ADD CONSTRAINT PK_Appointments PRIMARY KEY NONCLUSTERED (ID);
 ```

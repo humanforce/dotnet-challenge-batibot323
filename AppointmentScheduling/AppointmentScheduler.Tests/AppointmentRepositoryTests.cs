@@ -51,6 +51,8 @@ namespace AppointmentScheduler.Tests
 
 		// not sure what to do with completed status, do we have guarantees that appointments will be marked as completed only when the appointment end time has lapsed?
 		// let's just treat completed as scheduled in deciding conflicts.
+		// i think main contention is, can an appointment be updated to `COMPLETED` once it finishes even before the end time?
+		// then would this allow us to double book? or should we update the appointment end time to when the appointment is finished not the planned end time?
 		[InlineData(1, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Completed, true)]  // Overlapping
 		[InlineData(1, "2025-03-16T09:00:01", "2025-03-16T09:00:02", AppointmentStatus.Completed, true)]  // Contained inside
 		[InlineData(1, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Completed, true)]  // Overlapping in front
@@ -149,6 +151,8 @@ namespace AppointmentScheduler.Tests
 				Assert.Equal(expectedResult, result);
 			}
 		}
+
+		// urgent-hani: add tests for same patient but different doctor.
 
 		[Theory]
 		[InlineData(1, "2025-03-16", 2)] // Two appointments on the same date for the same doctor
