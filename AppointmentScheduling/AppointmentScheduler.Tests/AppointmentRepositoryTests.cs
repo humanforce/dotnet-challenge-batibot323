@@ -152,7 +152,60 @@ namespace AppointmentScheduler.Tests
 			}
 		}
 
-		// urgent-hani: add tests for same patient but different doctor.
+		[Theory]
+		[InlineData(1, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Scheduled, true)]  // Same patient, overlapping
+		[InlineData(2, "2025-03-16T09:15:00", "2025-03-16T09:45:00", AppointmentStatus.Scheduled, false)]  // Different patient, overlapping
+		[InlineData(1, "2025-03-16T09:00:01", "2025-03-16T09:00:02", AppointmentStatus.Scheduled, true)]  // Same patient, contained inside
+		[InlineData(2, "2025-03-16T09:00:01", "2025-03-16T09:00:02", AppointmentStatus.Scheduled, false)]  // Different patient, contained inside
+		[InlineData(1, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Scheduled, true)]  // Same patient, overlapping in front
+		[InlineData(2, "2025-03-16T08:45:00", "2025-03-16T09:00:01", AppointmentStatus.Scheduled, false)]  // Different patient, overlapping in front
+		[InlineData(1, "2025-03-16T10:00:00", "2025-03-16T10:30:00", AppointmentStatus.Scheduled, false)] // Same patient, no overlap
+		[InlineData(2, "2025-03-16T10:00:00", "2025-03-16T10:30:00", AppointmentStatus.Scheduled, false)] // Different patient, no overlap
+		[InlineData(1, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Scheduled, true)]  // Same patient, exact overlap
+		[InlineData(2, "2025-03-16T09:00:00", "2025-03-16T09:30:00", AppointmentStatus.Scheduled, false)]  // Different patient, exact overlap
+		[InlineData(1, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Scheduled, false)] // Same patient, ends exactly when another starts
+		[InlineData(2, "2025-03-16T08:30:00", "2025-03-16T09:00:00", AppointmentStatus.Scheduled, false)] // Different patient, ends exactly when another starts
+		[InlineData(1, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Same patient, starts exactly when another ends
+		[InlineData(2, "2025-03-16T09:30:00", "2025-03-16T10:00:00", AppointmentStatus.Scheduled, false)] // Different patient, starts exactly when another ends
+		public async Task HasConflict_DifferentDoctors_VaryingPatients(int newPatientId, string newStartTime, string newEndTime, string status, bool expectedResult)
+		{
+			// Arrange
+			var options = GetInMemoryDbContextOptions();
+			using (var context = new AppointmentSchedulerDbContext(options))
+			{
+				context.Database.EnsureDeleted(); // Reset the database
+				context.Database.EnsureCreated(); // Recreate the database
+
+				var repository = new AppointmentRepository(context);
+				var existingAppointment = new Appointment
+				{
+					PatientID = 1,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 16, 9, 0, 0),
+					EndDate = new DateTime(2025, 3, 16, 9, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				};
+				await context.Appointments.AddAsync(existingAppointment);
+				await context.SaveChangesAsync();
+
+				var newAppointment = new Appointment
+				{
+					PatientID = newPatientId,
+					DoctorID = 2, // Ensure different doctor
+					StartDate = DateTime.Parse(newStartTime),
+					EndDate = DateTime.Parse(newEndTime),
+					Status = status
+				};
+
+				// Act
+				var result = await repository.HasConflict(newAppointment);
+
+				// Assert
+				Assert.Equal(expectedResult, result);
+			}
+		}
+
+
 
 		[Theory]
 		[InlineData(1, "2025-03-16", 2)] // Two appointments on the same date for the same doctor
