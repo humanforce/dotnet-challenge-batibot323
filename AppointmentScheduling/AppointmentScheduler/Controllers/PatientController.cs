@@ -19,6 +19,7 @@ namespace AppointmentScheduler.API.Controllers
 		[HttpGet("{patientId}/appointments")]
 		public async Task<IActionResult> GetPatientAppointments(int patientId)
 		{
+			// defer-hani: we can't handle if patientId is int or string here because it gets intercepted.
 			var patientAppointments = await _patientService.GetPatientAppointmentsAsync(patientId);
 			if (patientAppointments == null)
 			{

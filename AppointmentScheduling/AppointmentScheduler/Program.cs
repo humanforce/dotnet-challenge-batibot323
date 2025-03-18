@@ -4,6 +4,7 @@ using AppointmentScheduler.Domain.Repositories;
 using AppointmentScheduler.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using AppointmentScheduler.Domain.Entities;
+using AppointmentScheduler.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// Use custom middleware for handling validation errors
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 app.MapControllers();
 
