@@ -37,7 +37,7 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 - decided to forego heroku and just demo in my local. used local sql, postman, and ef core for repo, but with me creating the db migration myself as it's the easiest for me.
 
 ## TODO
-- [ ] review the repo layer, could be lots of default implementations that's unnecessary.
+- [X] review the repo layer, could be lots of default implementations that's unnecessary.
 - [X] edit the presentation layer (api), `AppointmentScheduler`
 - [X] try to start e2e debug flow using api + postman + local debugging
 - [X] connect to db layer
