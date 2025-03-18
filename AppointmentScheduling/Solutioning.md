@@ -1,5 +1,82 @@
-# Overview
-This is to run you through my thought processes as I'm solving this problem. Look at Appendix - Setup for how to set up this project.
+# Overview and Startup
+This is to run you through my thought processes as I'm solving this problem. Look at Appendix - Setup for how to set up this project. I've also added the postman collection, titled `hf-appointment-scheduler.postman_collection.json`.
+
+## Setup
+
+### Application
+1. install nuget
+2. rebuild solution
+3. set iis for debugging
+4. run in local
+
+### Database
+1. install local sql
+2. use connection string for that, in this case create a database with name, `humanforce-scheduling`
+3. run the sql migration script
+
+## SQL Migration
+```sql
+-- Drop existing tables if they exist (in reverse order of creation to handle foreign key constraints)
+IF OBJECT_ID('dbo.Appointments', 'U') IS NOT NULL
+    DROP TABLE dbo.Appointments;
+
+IF OBJECT_ID('dbo.Doctors', 'U') IS NOT NULL
+    DROP TABLE dbo.Doctors;
+
+IF OBJECT_ID('dbo.Patients', 'U') IS NOT NULL
+    DROP TABLE dbo.Patients;
+
+-- Create tables with appropriate indices
+CREATE TABLE Patients (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    PhoneNumber NVARCHAR(15) NOT NULL,
+    EmailAddress NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Doctors (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Specialty NVARCHAR(100) NOT NULL
+);
+CREATE INDEX IDX_Doctors_Specialty ON Doctors(Specialty);
+
+CREATE TABLE Appointments (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    PatientID INT NOT NULL,
+    DoctorID INT NOT NULL,
+    StartDate DATETIME NOT NULL,
+    EndDate DATETIME NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    FOREIGN KEY (PatientID) REFERENCES Patients(ID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(ID)
+);
+CREATE INDEX IDX_Appointments_PatientID ON Appointments(PatientID);
+CREATE INDEX IDX_Appointments_DoctorID ON Appointments(DoctorID);
+-- not sure about indexing the time. i'm still thinking there should be a way to lock later a one-hour block if you're scheduling for a doctor so we don't do double booking if multiple nodes try to write to the same timeblock concurrently.
+
+-- adapt to your pk
+-- Drop the existing primary key constraint and clustered index
+ALTER TABLE Appointments DROP CONSTRAINT PK__Appointm__3214EC27CF9E4449;
+
+-- Create a new clustered index on the StartDate column
+-- CREATE CLUSTERED INDEX IDX_Appointments_StartDate ON Appointments(StartDate);
+
+-- Recreate the primary key constraint as a non-clustered index
+ALTER TABLE Appointments ADD CONSTRAINT PK_Appointments PRIMARY KEY NONCLUSTERED (ID);
+```
+
+## SQL Data
+```sql
+insert into Doctors ([name], specialty) values('john doe', 'im');
+insert into Doctors ([name], specialty) values('martin yamz', 'ob');
+insert into Patients ([name], DateOfBirth, PhoneNumber, EmailAddress) values('jane doe', '1998-02-07', '+639201234123', 'jane.doe@gmail.com');
+insert into Patients ([name], DateOfBirth, PhoneNumber, EmailAddress) values('marsha smith', '1998-10-17', '+639201234123', 'marsha.smith@gmail.com');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '1', '2025-03-16 09:00', '2025-03-16 09:30', 'SCHEDULED');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '2', '2025-03-17 09:00', '2025-03-17 09:30', 'SCHEDULED');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '1', '2025-03-18 23:30', '2025-03-19 00:30', 'SCHEDULED');
+```
 
 # Design
 - used clean architecture 
@@ -119,4 +196,15 @@ ALTER TABLE Appointments DROP CONSTRAINT PK__Appointm__3214EC27CF9E4449;
 
 -- Recreate the primary key constraint as a non-clustered index
 ALTER TABLE Appointments ADD CONSTRAINT PK_Appointments PRIMARY KEY NONCLUSTERED (ID);
+```
+
+## SQL Data
+```sql
+insert into Doctors ([name], specialty) values('john doe', 'im');
+insert into Doctors ([name], specialty) values('martin yamz', 'ob');
+insert into Patients ([name], DateOfBirth, PhoneNumber, EmailAddress) values('jane doe', '1998-02-07', '+639201234123', 'jane.doe@gmail.com');
+insert into Patients ([name], DateOfBirth, PhoneNumber, EmailAddress) values('marsha smith', '1998-10-17', '+639201234123', 'marsha.smith@gmail.com');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '1', '2025-03-16 09:00', '2025-03-16 09:30', 'SCHEDULED');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '2', '2025-03-17 09:00', '2025-03-17 09:30', 'SCHEDULED');
+insert into Appointments (DoctorID, PatientID, StartDate, EndDate, [Status]) values('1', '1', '2025-03-18 23:30', '2025-03-19 00:30', 'SCHEDULED');
 ```
