@@ -11,6 +11,10 @@ This is to run you through my thought processes as I'm solving this problem. Loo
 - clustered index on appointments start date because we usually query with a date range
   - however not sure how this works with our query not only looking at start date but also end date
 
+## Bonus
+- for authentication, use api key if main api user is businesses. if persons, use oauth2 where they have to do user + password.
+- use authentication to limit access to doctors or patients, need to add merchantid or personid field to these db tables to know if possible to get.
+
 ## Initial Thoughts
 Scheduling appointments seem to be straightforward but now my initial hard think is how small I want the time resolution be. Can we assume appointments are in 15-minute blocks? Google Calendar actually allows you to specify a time down to the minute. The main problem here is to solve scheduling conflicts and how to find present a doctor's available time slots.
 
@@ -53,6 +57,16 @@ I'll be using GitHub Copilot as it's a tool meant to be used to aid us in our wo
 # Appendix
 
 ## Setup
+### Application
+1. install nuget
+2. rebuild solution
+3. set iis for debugging
+4. run in local
+
+### Database
+1. install local sql
+2. use connection string for that, in this case create a database with name, `humanforce-scheduling`
+3. run the sql migration script
 
 ## SQL Migration
 ```sql
@@ -96,6 +110,7 @@ CREATE INDEX IDX_Appointments_PatientID ON Appointments(PatientID);
 CREATE INDEX IDX_Appointments_DoctorID ON Appointments(DoctorID);
 -- not sure about indexing the time. i'm still thinking there should be a way to lock later a one-hour block if you're scheduling for a doctor so we don't do double booking if multiple nodes try to write to the same timeblock concurrently.
 
+-- adapt to your pk
 -- Drop the existing primary key constraint and clustered index
 ALTER TABLE Appointments DROP CONSTRAINT PK__Appointm__3214EC27CF9E4449;
 
