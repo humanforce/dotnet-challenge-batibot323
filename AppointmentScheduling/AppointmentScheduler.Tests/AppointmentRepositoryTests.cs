@@ -149,5 +149,86 @@ namespace AppointmentScheduler.Tests
 				Assert.Equal(expectedResult, result);
 			}
 		}
+
+		[Theory]
+		[InlineData(1, "2025-03-16", 2)] // Two appointments on the same date for the same doctor
+		[InlineData(1, "2025-03-17", 1)] // One appointment on a different date for the same doctor
+		[InlineData(2, "2025-03-16", 1)] // One appointment on the same date for a different doctor
+		[InlineData(2, "2025-03-17", 0)] // No appointments on a different date for a different doctor
+		[InlineData(1, "2025-03-19", 2)] // Checks if appointments bleed to next day
+		public async Task GetAppointmentsByDoctorAndDateAsync_ShouldReturnExpectedResult(int doctorId, string date, int expectedCount)
+		{
+			// Arrange
+			var options = GetInMemoryDbContextOptions();
+			using (var context = new AppointmentSchedulerDbContext(options))
+			{
+				context.Database.EnsureDeleted(); // Reset the database
+				context.Database.EnsureCreated(); // Recreate the database
+
+				var repository = new AppointmentRepository(context);
+				var appointments = new List<Appointment>
+			{
+				new Appointment
+				{
+					PatientID = 1,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 16, 9, 0, 0),
+					EndDate = new DateTime(2025, 3, 16, 9, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				},
+				new Appointment
+				{
+					PatientID = 2,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 16, 10, 0, 0),
+					EndDate = new DateTime(2025, 3, 16, 10, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				},
+				new Appointment
+				{
+					PatientID = 3,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 17, 9, 0, 0),
+					EndDate = new DateTime(2025, 3, 17, 9, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				},
+				new Appointment
+				{
+					PatientID = 4,
+					DoctorID = 2,
+					StartDate = new DateTime(2025, 3, 16, 9, 0, 0),
+					EndDate = new DateTime(2025, 3, 16, 9, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				},
+				new Appointment
+				{
+					PatientID = 3,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 18, 23, 30, 0),
+					EndDate = new DateTime(2025, 3, 19, 0, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				},
+				new Appointment
+				{
+					PatientID = 3,
+					DoctorID = 1,
+					StartDate = new DateTime(2025, 3, 19, 23, 30, 0),
+					EndDate = new DateTime(2025, 3, 20, 0, 30, 0),
+					Status = AppointmentStatus.Scheduled
+				}
+			};
+
+				await context.Appointments.AddRangeAsync(appointments);
+				await context.SaveChangesAsync();
+
+				var queryDate = DateTime.Parse(date);
+
+				// Act
+				var result = await repository.GetAppointmentsByDoctorAndDateAsync(doctorId, queryDate);
+
+				// Assert
+				Assert.Equal(expectedCount, result.Count());
+			}
+		}
 	}
 }

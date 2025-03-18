@@ -44,6 +44,7 @@ namespace AppointmentScheduler.Tests.Services
 		{
 			// Arrange
 			var doctorId = 1;
+			// this
 			_doctorRepositoryMock.Setup(repo => repo.GetByIdAsync(doctorId)).ReturnsAsync((Doctor)null);
 
 			// Act
@@ -92,8 +93,6 @@ namespace AppointmentScheduler.Tests.Services
 			Assert.Equal(appointment2End, result.AvailableTimeSlots[2].StartTime);
 			Assert.Equal(date.Date.AddDays(1), result.AvailableTimeSlots[2].EndTime);
 		}
-
-
 
 		[Fact]
 		public async Task GetAvailableTimeSlotsAsync_ShouldReturnNull_WhenDoctorDoesNotExist()
