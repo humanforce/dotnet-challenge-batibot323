@@ -81,7 +81,7 @@ namespace AppointmentScheduler.Domain.Services
 			// Initialize the start of the day to midnight
 			var currentStart = date.Date;
 
-			// creates timeslots where t.start is the previous appointment, a.end and t.end is the next a.start.
+			// creates timeslots where t.start is the previous appointment, a.end and t.end is the next currentStart.
 			foreach (var appointment in sortedAppointments)
 			{
 				if (appointment.StartDate > currentStart)
@@ -104,7 +104,34 @@ namespace AppointmentScheduler.Domain.Services
 		// todo-hani: implement this.
 		private IEnumerable<TimeSlot> CalculateAvailableTimeSlotsRange(IEnumerable<Appointment> appointments, DateTime startDate, DateTime endDate)
 		{
-			throw new NotImplementedException();
+			var timeSlots = new List<TimeSlot>();
+
+			// Sort appointments by start time
+			var sortedAppointments = appointments
+				.Where(a => a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Completed)
+				.OrderBy(a => a.StartDate).ToList();
+
+			// Initialize the start of the day to midnight
+			var currentStart = startDate.Date;
+
+			// creates timeslots where t.start is the previous appointment, a.end and t.end is the next currentStart.
+			foreach (var appointment in sortedAppointments)
+			{
+				if (appointment.StartDate > currentStart)
+				{
+					timeSlots.Add(new TimeSlot { StartTime = currentStart, EndTime = appointment.StartDate });
+				}
+				currentStart = appointment.EndDate > currentStart ? appointment.EndDate : currentStart;
+			}
+
+			// Add the remaining time slot until the end of the day
+			var endOfDay = endDate.Date.AddDays(1);
+			if (currentStart < endOfDay)
+			{
+				timeSlots.Add(new TimeSlot { StartTime = currentStart, EndTime = endOfDay });
+			}
+
+			return timeSlots;
 		}
 	}
 }
