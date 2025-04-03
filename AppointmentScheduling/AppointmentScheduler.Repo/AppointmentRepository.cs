@@ -29,10 +29,11 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 			// but actually old.StartDate < new.EndDate actually almost ensures that there's an overlap
 			// except if we're way past the preexisting, such that new.StartDate > old.EndDate then no overlap.
 			bool hasConflict = await _context.Appointments
-				.AnyAsync(existing => (existing.DoctorID == newAppointment.DoctorID || existing.PatientID == newAppointment.PatientID) &&
-							   existing.StartDate < newAppointment.EndDate &&
-							   existing.EndDate > newAppointment.StartDate &&
-							   (existing.Status == AppointmentStatus.Scheduled || existing.Status == AppointmentStatus.Completed));
+				.AnyAsync(existing => existing.ID != newAppointment.ID &&
+								(existing.DoctorID == newAppointment.DoctorID || existing.PatientID == newAppointment.PatientID) &&
+								existing.StartDate < newAppointment.EndDate &&
+								existing.EndDate > newAppointment.StartDate &&
+								(existing.Status == AppointmentStatus.Scheduled || existing.Status == AppointmentStatus.Completed));
 			return hasConflict;
 		}
 
