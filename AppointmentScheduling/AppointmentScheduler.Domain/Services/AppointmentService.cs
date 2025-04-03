@@ -18,8 +18,6 @@ namespace AppointmentScheduler.Domain.Services
 		public async Task<bool> CreateAppointment(Appointment appointment)
 		{
 			var canBeScheduled = !(await _appointmentRepository.HasConflict(appointment));
-			var status = appointment.Status.ToUpper();
-			if (status != AppointmentStatus.Scheduled && status != AppointmentStatus.Completed && status != AppointmentStatus.Cancelled)
 			if (!canBeScheduled)
 			{
 				return false;

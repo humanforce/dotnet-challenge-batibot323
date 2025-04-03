@@ -148,6 +148,12 @@ namespace AppointmentScheduler.API.Controllers
 				return (false, BadRequest("Appointment cannot be scheduled in the past."));
 			}
 
+			var status = appointment.Status.ToUpper();
+			if (status != AppointmentStatus.Scheduled && status != AppointmentStatus.Completed && status != AppointmentStatus.Cancelled)
+			{
+				return (false, BadRequest("Status has to be either `SCHEDULED`, `COMPLETED`, or `CANCELLED`."));
+			}
+
 			return (true, null);
 		}
 	}
