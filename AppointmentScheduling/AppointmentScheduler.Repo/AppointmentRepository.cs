@@ -48,6 +48,7 @@ namespace AppointmentScheduler.Infrastructure.Repositories
 
 		public async Task AddAsync(Appointment appointment)
 		{
+			appointment.Status = appointment.Status.ToUpper();
 			await _context.Appointments.AddAsync(appointment);
 			await _context.SaveChangesAsync();
 		}
